@@ -7,19 +7,56 @@ const saltRounds = 10;
 
 const usuarioRouter = express.Router();
 
-usuarioRouter.post('/',  (req, res) => {
+usuarioRouter.post('/register',  (req, res) => {
     const email = req.body.email;
     const name = req.body.name;
     const surname = req.body.surname;
+    const birthdate = req.body.birthdate;
     const password = req.body.password;
-
+    
     bcrypt.hash(password, saltRounds, function(err, hash) {
         const usuario = new Usuario()
 
         usuario.email = email;
         usuario.name = name;
         usuario.surname = surname;
+        usuario.birthdate = birthdate;
         usuario.password = hash;
+
+        usuario.save()
+            .then((newUsuario)=> {
+                res.json(newUsuario);
+            })
+            .catch((error)=> {
+                res.status(500).send(error);
+            })
+    });
+});
+usuarioRouter.post('/registerGuardian',  (req, res) => {
+    const email = req.body.email;
+    const name = req.body.name;
+    const surname = req.body.surname;
+    const birthdate = req.body.birthdate;
+    const password = req.body.password;
+    const rol = "Guardian";
+    const location = req.body.location;
+    const geoLocation = req.body.geoLocation;
+    const images = req.body.images;
+    const personalImage = re.body.personalImage;
+        
+    bcrypt.hash(password, saltRounds, function(err, hash) {
+        const usuario = new Usuario()
+
+        usuario.email = email;
+        usuario.name = name;
+        usuario.surname = surname;
+        usuario.birthdate = birthdate;
+        usuario.password = hash;
+        usuario.rol = rol;
+        usuario.location = location;
+        usuario.geoLocation = geoLocation;
+        usuario.images = images;
+        usuario.personalImage = personalImage;
 
         usuario.save()
             .then((newUsuario)=> {
@@ -63,6 +100,30 @@ usuarioRouter.post('/login',  (req, res) => {
         return res.status(404).json({ logged : false})
     })
 });
+
+usuarioRouter.get('/guardianes/:id', (req, res)=> {
+    const id = req.params.id;
+    Usuario.findById(id, {__v: 0, updatedAt: 0, createdAt: 0})
+        .exec((err, Usuario) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.send(Usuario)
+            }
+        })
+})
+
+usuarioRouter.get('/guardianes', (req, res) => {
+    Usuario.find({rol: "Guardian"}, {__v: 0, createdAt: 0, updatedAt: 0})
+        .exec((err, usuarios) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.send(usuarios)
+            }
+        })
+});
+
 
 usuarioRouter.get('/logout', authenticateJWT, (req, res)=> {
 
