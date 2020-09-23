@@ -1,0 +1,25 @@
+body {
+    text-align: center;
+}
+
+li {
+    display: flex;   
+    align-items: center; 
+    border: solid 1px black;
+    list-style: none;
+    padding: 5px;
+    margin: 20px 20px;
+}
+
+li div {
+    flex-basis: 100%;
+    text-align: center;
+}
+
+li button {
+    font-size: x-large;
+}
+
+.header {
+    display: flex;
+  }
