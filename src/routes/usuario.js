@@ -80,9 +80,8 @@ usuarioRouter.post('/login',  (req, res) => {
                 if(result)
                 {
                     const accessToken = jwt.sign(
-                        { userID: user._id, email: user.email , name: user.name, rol: user.rol }, 
+                        { userID: user._id, email: user.email , name: user.name, rol: user.rol },
                         process.env.JWT_SECRET);
-                    
                     return res.json({ logged : true, token: accessToken})
                 }
                 else
