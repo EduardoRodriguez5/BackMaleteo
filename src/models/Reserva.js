@@ -5,9 +5,10 @@ const reservaSchema = new Schema(
     {
         initialDate: {type: Date, required:true},
         finalDate: {type:Date, required:true},
-        price:{type: Number, required: true},
+        nSuitcases: {type:Number, required: true},
+        price:{type: Number},
         client: {type:String, required:true},
-        guardian:{type:String, required: true},
+        guardian:{type: Schema.Types.ObjectId, ref:"Usuario"},
         review:{type:String}
 
     }

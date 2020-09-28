@@ -32,7 +32,7 @@ usuarioRouter.post('/register',  (req, res) => {
             })
     });
 });
-usuarioRouter.post('/registerGuardian',  (req, res) => {
+usuarioRouter.post('/registerGuardian', authenticateJWT, (req, res) => {
     const email = req.body.email;
     const name = req.body.name;
     const surname = req.body.surname;
@@ -100,7 +100,7 @@ usuarioRouter.post('/login',  (req, res) => {
     })
 });
 
-usuarioRouter.get('/guardianes/:id', (req, res)=> {
+usuarioRouter.get('/guardianes/:id',  (req, res)=> {
     const id = req.params.id;
     Usuario.findById(id, {__v: 0, updatedAt: 0, createdAt: 0})
         .exec((err, Usuario) => {
