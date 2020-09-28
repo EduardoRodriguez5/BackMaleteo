@@ -2,6 +2,7 @@ const express = require('express');
 var cors = require('cors')
 require("dotenv").config();
 
+const reservasRoutes = require('./routes/reserva');
 const usuariosRoutes = require('./routes/usuario');
 
 require('./db.js');
@@ -15,7 +16,8 @@ server.use(cors());
 server.use(express.json());
 server.use(express.urlencoded({extended: false}));
 
-server.use('/users', usuariosRoutes)
+server.use('/users', usuariosRoutes);
+server.use('/bookings', reservasRoutes);
 
 
 server.listen(PORT, () => {
