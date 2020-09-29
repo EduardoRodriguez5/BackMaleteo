@@ -4,6 +4,31 @@ const jwt = require('jsonwebtoken');
 const authenticateJWT = require('../middlewares/autentication');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+var multer  = require('multer')
+
+const VALID_FILE_TYPES = ['image/png', 'image/jpg'];
+const IMAGES_URL_BASE = "/profileImages";
+
+const fileFilter = (req, file, cb) => {
+  if (!VALID_FILE_TYPES.includes(file.mimetype)) {
+    cb(new Error('Invalid file type'));
+  } else {
+    cb(null, true);
+  }
+}
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "./public" + IMAGES_URL_BASE)
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname)
+    }
+  })
+   
+  var upload = multer({ storage: storage, fileFilter: fileFilter })
+
+
 
 const usuarioRouter = express.Router();
 
@@ -42,7 +67,7 @@ usuarioRouter.post('/registerGuardian', authenticateJWT, (req, res) => {
     const location = req.body.location;
     const geoLocation = req.body.geoLocation;
     const images = req.body.images;
-    const personalImage = re.body.personalImage;
+    const personalImage = req.body.personalImage;
         
     bcrypt.hash(password, saltRounds, function(err, hash) {
         const usuario = new Usuario()
@@ -82,7 +107,7 @@ usuarioRouter.post('/login',  (req, res) => {
                     const accessToken = jwt.sign(
                         { userID: user._id, email: user.email , name: user.name, rol: user.rol},
                         process.env.JWT_SECRET);
-                    return res.json({ logged : true, token: accessToken, user:{name: user.name, surname: user.surname, email: user.email, logged : true} })
+                    return res.json({ logged : true, token: accessToken, user:{name: user.name, surname: user.surname, email: user.email, birthdate: user.birthdate,logged : true} })
                 }
                 else
                 {
@@ -157,6 +182,23 @@ usuarioRouter.get('/logout', authenticateJWT, (req, res)=> {
 
     res.json({ loggedout : true, goodBye: userData.email})
 })
+
+// usuarioRouter.post('/profile', upload.single('avatar'), function (req, res, next) {
+    
+//     Usuario.findByIdAndUpdate(req.user.userID, {
+//         personalImage: IMAGES_URL_BASE + "/" + req.file.filename
+//     })
+//     .then((updateUser,err) => {
+//         if(err)
+//         {
+//             res.status(500).send(err)
+//         }
+//         else {
+//             res.send("Imagen actualizada")
+//         }
+//     })
+
+//   })
 
 
 module.exports = usuarioRouter;
