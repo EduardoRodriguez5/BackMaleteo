@@ -107,7 +107,7 @@ usuarioRouter.post('/login',  (req, res) => {
                     const accessToken = jwt.sign(
                         { userID: user._id, email: user.email , name: user.name, rol: user.rol},
                         process.env.JWT_SECRET);
-                    return res.json({ logged : true, token: accessToken, user:{name: user.name, surname: user.surname, email: user.email, birthdate: user.birthdate,logged : true} })
+                    return res.json({ logged : true, token: accessToken, user:{name: user.name, surname: user.surname, email: user.email, birthdate: user.birthdate, id: user._id, logged : true} })
                 }
                 else
                 {
