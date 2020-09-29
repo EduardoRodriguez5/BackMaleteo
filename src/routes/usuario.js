@@ -151,17 +151,15 @@ usuarioRouter.get('/guardianes', (req, res) => {
 usuarioRouter.put("/update/:id", (req, res)=> {
     const id = req.params.id;
 
-    const email = req.body.email;
+
     const name = req.body.name;
     const surname = req.body.surname;
     const birthdate = req.body.birthdate;
-   
 
     Usuario.findByIdAndUpdate(id, {
-        email: email,
         name: name,
         surname: surname,
-        birthdate: birthdate,
+        birthdate: birthdate
     })
         .then(()=> {
             return Usuario.findById(id);
@@ -173,6 +171,30 @@ usuarioRouter.put("/update/:id", (req, res)=> {
             res.status(500).send(error);
         })
 })
+
+usuarioRouter.put("/changeGuardian/:id", (req, res)=> {
+    const id = req.params.id;
+
+    const rol = "Guardian";
+    const location = req.body.location;
+    const geoLocation = req.body.geoLocation;
+
+    Usuario.findByIdAndUpdate(id, {
+        rol: rol,
+        location: location,
+        geoLocation: geoLocation
+    })
+        .then(()=> {
+            return Usuario.findById(id);
+        })
+        .then((newGuardian)=> {
+            res.send(newGuardian);
+        })
+        .catch((error)=> {
+            res.status(500).send(error);
+        })
+})
+
 
 
 
