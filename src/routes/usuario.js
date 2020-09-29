@@ -123,6 +123,33 @@ usuarioRouter.get('/guardianes', (req, res) => {
         })
 });
 
+usuarioRouter.put("/update/:id", (req, res)=> {
+    const id = req.params.id;
+
+    const email = req.body.email;
+    const name = req.body.name;
+    const surname = req.body.surname;
+    const birthdate = req.body.birthdate;
+   
+
+    Usuario.findByIdAndUpdate(id, {
+        email: email,
+        name: name,
+        surname: surname,
+        birthdate: birthdate,
+    })
+        .then(()=> {
+            return Usuario.findById(id);
+        })
+        .then((usuarioActualizado)=> {
+            res.send(usuarioActualizado);
+        })
+        .catch((error)=> {
+            res.status(500).send(error);
+        })
+})
+
+
 
 usuarioRouter.get('/logout', authenticateJWT, (req, res)=> {
 
