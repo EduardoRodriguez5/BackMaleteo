@@ -38,6 +38,7 @@ usuarioRouter.post('/register',  (req, res) => {
     const surname = req.body.surname;
     const birthdate = req.body.birthdate;
     const password = req.body.password;
+    const personalImage = IMAGES_URL_BASE + "/user.png";
     
     bcrypt.hash(password, saltRounds, function(err, hash) {
         const usuario = new Usuario()
@@ -47,6 +48,7 @@ usuarioRouter.post('/register',  (req, res) => {
         usuario.surname = surname;
         usuario.birthdate = birthdate;
         usuario.password = hash;
+        usuario.personalImage = personalImage;
 
         usuario.save()
             .then((newUsuario)=> {
@@ -160,7 +162,7 @@ usuarioRouter.put("/update/:id", upload.single('avatar'), (req, res)=> {
         name: name,
         surname: surname,
         birthdate: birthdate,
-        personalImage: req.file && req.file.filename ? IMAGES_URL_BASE + "/" + req.file.filename : IMAGES_URL_BASE + "/" + 'White.png'
+        personalImage: req.file && req.file.filename ? IMAGES_URL_BASE + "/" + req.file.filename : IMAGES_URL_BASE + "/user.png"
     })
         .then(()=> {
             return Usuario.findById(id);
