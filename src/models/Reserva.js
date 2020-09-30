@@ -12,9 +12,7 @@ const reservaSchema = new Schema(
         review:{type:String}
 
     }
-
 );
-
 
 const Reserva = mongoose.model('Reserva', reservaSchema);
 module.exports = Reserva;

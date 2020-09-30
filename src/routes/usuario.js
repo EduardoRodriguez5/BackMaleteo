@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 var multer  = require('multer')
 
-const VALID_FILE_TYPES = ['image/png', 'image/jpg'];
+const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
 const IMAGES_URL_BASE = "/profileImages";
 
 const fileFilter = (req, file, cb) => {
@@ -148,7 +148,7 @@ usuarioRouter.get('/guardianes', (req, res) => {
         })
 });
 
-usuarioRouter.put("/update/:id", (req, res)=> {
+usuarioRouter.put("/update/:id", upload.single('avatar'), (req, res)=> {
     const id = req.params.id;
 
 
@@ -159,7 +159,8 @@ usuarioRouter.put("/update/:id", (req, res)=> {
     Usuario.findByIdAndUpdate(id, {
         name: name,
         surname: surname,
-        birthdate: birthdate
+        birthdate: birthdate,
+        personalImage: req.file && req.file.filename ? IMAGES_URL_BASE + "/" + req.file.filename : IMAGES_URL_BASE + "/" + 'White.png'
     })
         .then(()=> {
             return Usuario.findById(id);
@@ -172,17 +173,21 @@ usuarioRouter.put("/update/:id", (req, res)=> {
         })
 })
 
-usuarioRouter.put("/changeGuardian/:id", (req, res)=> {
+usuarioRouter.put("/changeGuardian/:id",  upload.array('images', 10), (req, res)=> {
     const id = req.params.id;
 
     const rol = "Guardian";
     const location = req.body.location;
     const geoLocation = req.body.geoLocation;
+    const images = req.files.map((file, i) => {
+        return IMAGES_URL_BASE + "/" + file.filename
+    })
 
     Usuario.findByIdAndUpdate(id, {
         rol: rol,
         location: location,
-        geoLocation: geoLocation
+        geoLocation: geoLocation,
+        images: images
     })
         .then(()=> {
             return Usuario.findById(id);
