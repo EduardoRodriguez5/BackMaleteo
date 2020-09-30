@@ -4,6 +4,18 @@ const jwt = require('jsonwebtoken');
 const authenticateJWT = require('../middlewares/autentication');
 const reservaRouter = express.Router();
 
+reservaRouter.get('/booking/:id', (req, res)=> {
+    const id = req.params.id;
+    Reserva.findById(id, {__v: 0, updatedAt: 0, createdAt: 0})
+        .populate("guardian")
+        .exec((err, reserva) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.send(reserva)
+            }
+        })
+});
 reservaRouter.get('/:email', (req, res)=> {
     const email = req.params.email;
     Reserva.find({"client": email},{__v: 0, updatedAt: 0, createdAt: 0})
@@ -16,6 +28,7 @@ reservaRouter.get('/:email', (req, res)=> {
             }
         })
 });
+
 reservaRouter.get('/', (req, res) => {
     Reserva.find({}, {__v: 0, createdAt: 0, updatedAt: 0})
         .exec((err, reservas) => {
