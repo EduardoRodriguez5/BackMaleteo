@@ -61,6 +61,15 @@ reservaRouter.post('/register', (req, res) => {
             })
 });
 
-
+reservaRouter.delete('/booking/delete/:id', (req, res) => {
+    const id = req.params.id;
+    Reserva.findByIdAndDelete(id)
+        .then((deletedReserva) => {
+            res.send('Reserva borrada');
+        })
+        .catch((error) => {
+            res.status(500).send(error);
+        })
+})
 
 module.exports = reservaRouter;
