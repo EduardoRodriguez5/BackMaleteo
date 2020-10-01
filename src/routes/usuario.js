@@ -7,7 +7,7 @@ const saltRounds = 10;
 var multer  = require('multer')
 
 const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
-const IMAGES_URL_BASE = "/profileImages";
+const IMAGES_URL_BASE = "http://localhost:4000/profileImages";
 
 const fileFilter = (req, file, cb) => {
   if (!VALID_FILE_TYPES.includes(file.mimetype)) {
@@ -19,7 +19,7 @@ const fileFilter = (req, file, cb) => {
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, "./public" + IMAGES_URL_BASE)
+      cb(null, "./public" + "/profileImages")
     },
     filename: function (req, file, cb) {
       cb(null, file.originalname)
@@ -212,22 +212,7 @@ usuarioRouter.get('/logout', authenticateJWT, (req, res)=> {
     res.json({ loggedout : true, goodBye: userData.email})
 })
 
-// usuarioRouter.post('/profile', upload.single('avatar'), function (req, res, next) {
-    
-//     Usuario.findByIdAndUpdate(req.user.userID, {
-//         personalImage: IMAGES_URL_BASE + "/" + req.file.filename
-//     })
-//     .then((updateUser,err) => {
-//         if(err)
-//         {
-//             res.status(500).send(err)
-//         }
-//         else {
-//             res.send("Imagen actualizada")
-//         }
-//     })
 
-//   })
 
 
 module.exports = usuarioRouter;
